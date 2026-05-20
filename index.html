@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>milana's design — Графический дизайнер</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#fafafa;
+  --bg-card:#f1f1f3;
+  --bg-soft:#f5f5f7;
+  --text:#0a0a0f;
+  --text-soft:#3a3a45;
+  --muted:#8a8a95;
+  --border:rgba(10,10,15,0.08);
+  --border-soft:rgba(10,10,15,0.05);
+  --blue:#2647ff;
+  --blue-soft:#4361ee;
+  --green:#25D366;
+  --radius:18px;
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.5;
+}
+
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+
+/* ─────── NAV ─────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:18px 40px;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:32px;
+  background:rgba(250,250,250,0.85);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--border-soft);
+}
+.nav-left{display:flex;gap:28px;align-items:center}
+.nav-num{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:500;color:var(--text);letter-spacing:.02em}
+.nav-num span{color:var(--muted);font-weight:400}
+.nav-num a:hover{opacity:.6}
+.nav-center{display:flex;justify-content:center}
+.nav-logo svg{height:22px;width:auto;display:block}
+.nav-logo svg path{fill:#0a0a0f}
+.nav-right{display:flex;gap:14px;align-items:center;justify-content:flex-end}
+.nav-link{font-size:12px;font-weight:500;color:var(--text);letter-spacing:.02em}
+.nav-link:hover{opacity:.6}
+
+.btn-wa{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--green);color:#fff;
+  padding:8px 14px;border-radius:100px;
+  font-size:12px;font-weight:500;letter-spacing:.01em;
+  transition:transform .2s,opacity .2s;
+}
+.btn-wa:hover{transform:translateY(-1px);opacity:.92}
+.btn-ig{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:50%;
+  background:transparent;border:1px solid var(--border);color:var(--text);
+  transition:background .2s,transform .2s;
+}
+.btn-ig:hover{background:rgba(0,0,0,0.04);transform:translateY(-1px)}
+
+.nav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px}
+.nav-burger span{display:block;width:20px;height:1.5px;background:#0a0a0f;transition:.3s}
+
+/* ─────── HERO ─────── */
+#hero{
+  padding:140px 40px 60px;
+  border-bottom:1px solid var(--border-soft);
+}
+.hero-grid{
+  max-width:1280px;margin:0 auto;
+  display:grid;grid-template-columns:1.5fr 1fr;
+  gap:80px;align-items:end;
+}
+.hero-title{
+  font-size:clamp(40px,5.5vw,72px);
+  font-weight:500;
+  line-height:1.04;
+  letter-spacing:-0.025em;
+  color:var(--text);
+}
+.hero-aside{display:flex;flex-direction:column;gap:24px;padding-bottom:8px}
+.hero-desc{font-size:14px;line-height:1.55;color:var(--text-soft);font-weight:400;max-width:320px}
+.btn-main{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#0a0a0f;color:#fff;
+  padding:11px 22px;border-radius:100px;
+  font-size:13px;font-weight:500;letter-spacing:.01em;
+  width:fit-content;
+  transition:transform .2s,background .2s;
+}
+.btn-main:hover{background:#1a1a25;transform:translateY(-1px)}
+.btn-main svg{transition:transform .2s}
+.btn-main:hover svg{transform:translate(2px,-2px)}
+
+/* ─────── FILTER PILLS ─────── */
+.filter-bar{
+  max-width:1280px;margin:0 auto;
+  padding:24px 40px;
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border-soft);
+}
+.filter-bar-inner{display:flex;gap:6px;align-items:center}
+.pill{
+  font-size:12px;font-weight:500;letter-spacing:.01em;
+  padding:7px 14px;border-radius:100px;
+  border:1px solid var(--border);
+  background:transparent;color:var(--text);
+  transition:all .2s;
+}
+.pill.active{background:#0a0a0f;color:#fff;border-color:#0a0a0f}
+.pill:hover{border-color:rgba(10,10,15,0.25)}
+.filter-middle{flex:1;text-align:center;font-size:11px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;font-weight:500}
+.filter-middle b{color:var(--text);font-weight:500}
+
+/* ─────── PORTFOLIO / GLASS CARDS ─────── */
+#portfolio{
+  padding:32px 40px 80px;
+}
+.port-grid{
+  max-width:1280px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+}
+.glass-card{
+  position:relative;border-radius:var(--radius);
+  overflow:hidden;aspect-ratio:1/1;
+  cursor:pointer;transition:transform .4s;
+  box-shadow:0 1px 2px rgba(0,0,0,0.04);
+}
+.glass-card:hover{transform:translateY(-3px)}
+
+/* Card 1 — iridescent reeded glass */
+.gc-iridescent{
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,0.07) 0px,rgba(255,255,255,0.07) 1px,
+      transparent 1px,transparent 8px),
+    radial-gradient(circle at 20% 30%,#4dd0ff 0%,transparent 45%),
+    radial-gradient(circle at 75% 50%,#c084ff 0%,transparent 50%),
+    radial-gradient(circle at 40% 75%,#4dffea 0%,transparent 40%),
+    radial-gradient(circle at 65% 20%,#ff84c0 0%,transparent 35%),
+    linear-gradient(135deg,#1e2065 0%,#0a1845 100%);
+}
+/* Card 2 — dark with bold 3D shapes */
+.gc-dark3d{
+  background:
+    radial-gradient(circle at 70% 50%,#2647ff 0%,transparent 35%),
+    radial-gradient(circle at 25% 75%,#5b3bff 0%,transparent 30%),
+    linear-gradient(135deg,#000 0%,#0a0a1a 100%);
+  position:relative;
+}
+.gc-dark3d::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 200px 280px at 65% 45%,rgba(38,71,255,.8) 0%,transparent 60%),
+    radial-gradient(ellipse 240px 200px at 80% 65%,rgba(91,59,255,.7) 0%,transparent 60%),
+    radial-gradient(ellipse 160px 220px at 50% 50%,rgba(120,90,255,.4) 0%,transparent 60%);
+  filter:blur(8px);
+}
+/* Card 3 — pink/purple gradient */
+.gc-pink{
+  background:
+    radial-gradient(circle at 30% 30%,#ff6ec4 0%,transparent 50%),
+    radial-gradient(circle at 70% 70%,#7873f5 0%,transparent 50%),
+    radial-gradient(circle at 50% 50%,#ffa4c8 0%,transparent 40%),
+    linear-gradient(135deg,#2a0a3e 0%,#0e0a2e 100%);
+}
+/* Card 4 — teal cyan */
+.gc-teal{
+  background:
+    radial-gradient(circle at 40% 40%,#06d6f0 0%,transparent 50%),
+    radial-gradient(circle at 70% 60%,#3a7bd5 0%,transparent 45%),
+    radial-gradient(circle at 25% 75%,#5fffd0 0%,transparent 40%),
+    linear-gradient(135deg,#0a1535 0%,#0a2e3e 100%);
+}
+/* Card 5 — sunset orange/pink */
+.gc-sunset{
+  background:
+    radial-gradient(circle at 30% 40%,#ff8a3d 0%,transparent 45%),
+    radial-gradient(circle at 70% 30%,#ff5e93 0%,transparent 45%),
+    radial-gradient(circle at 50% 80%,#b14df0 0%,transparent 40%),
+    linear-gradient(135deg,#2e0a3e 0%,#3e0a2a 100%);
+}
+
+/* Glass label sitting on the card */
+.glass-label{
+  position:absolute;top:18px;left:18px;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;
+  background:rgba(255,255,255,0.18);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.3);
+  border-radius:100px;
+  font-size:11px;font-weight:500;color:#fff;letter-spacing:.02em;
+  z-index:2;
+}
+.glass-arrow{
+  position:absolute;top:18px;right:18px;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,0.18);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.3);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;z-index:2;
+}
+.gc-dark3d .glass-arrow{background:rgba(38,71,255,.95);border-color:transparent}
+/* Bottom label area on card */
+.card-bottom{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:24px;z-index:2;
+}
+.card-title{
+  font-size:clamp(22px,2.2vw,30px);
+  font-weight:500;line-height:1.15;letter-spacing:-0.015em;
+  color:#fff;margin-bottom:6px;
+}
+.card-sub{font-size:12px;color:rgba(255,255,255,0.7);font-weight:400;line-height:1.5;max-width:90%}
+.card-try{
+  position:absolute;bottom:24px;right:24px;
+  font-size:11px;font-weight:500;color:rgba(255,255,255,0.85);
+  display:inline-flex;align-items:center;gap:5px;letter-spacing:.05em;
+}
+
+/* Asymmetric variants */
+.gc-tall{aspect-ratio:1/1.15}
+.gc-wide{aspect-ratio:1.2/1}
+
+/* ─────── SECTION SHARED ─────── */
+section{position:relative}
+.section-wrap{max-width:1280px;margin:0 auto;padding:80px 40px}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:48px;flex-wrap:wrap}
+.section-num{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-num::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--text)}
+.section-title{font-size:clamp(28px,3.5vw,44px);font-weight:500;line-height:1.1;letter-spacing:-0.02em;max-width:680px}
+.section-aside{max-width:300px;font-size:14px;color:var(--text-soft);line-height:1.55;padding-bottom:6px}
+
+/* ─────── ABOUT ─────── */
+#about{border-top:1px solid var(--border-soft);background:#fff}
+.about-grid{
+  display:grid;grid-template-columns:1.2fr 1fr;gap:80px;align-items:stretch;
+}
+.about-text-col{display:flex;flex-direction:column;gap:24px}
+.about-name{font-size:clamp(38px,5vw,64px);font-weight:500;line-height:1.05;letter-spacing:-0.025em}
+.about-name em{font-style:normal;background:linear-gradient(135deg,#2647ff,#7c4dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.about-desc{font-size:15px;color:var(--text-soft);line-height:1.6;max-width:480px}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-top:8px}
+.stat{padding:24px;background:#fff;display:flex;flex-direction:column;gap:4px}
+.stat-n{font-size:32px;font-weight:500;letter-spacing:-0.02em}
+.stat-l{font-size:12px;color:var(--muted);font-weight:400}
+.about-visual{
+  border-radius:var(--radius);overflow:hidden;
+  background:
+    radial-gradient(circle at 30% 40%,#4dd0ff 0%,transparent 45%),
+    radial-gradient(circle at 70% 60%,#c084ff 0%,transparent 45%),
+    radial-gradient(circle at 50% 80%,#4dffea 0%,transparent 40%),
+    linear-gradient(135deg,#1e2065 0%,#0a1845 100%);
+  position:relative;min-height:380px;
+}
+.about-visual::after{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,
+    rgba(255,255,255,0.05) 0px,rgba(255,255,255,0.05) 1px,
+    transparent 1px,transparent 8px);
+}
+.about-glass{
+  position:absolute;left:24px;right:24px;bottom:24px;
+  padding:18px 22px;
+  background:rgba(255,255,255,0.16);
+  backdrop-filter:blur(22px) saturate(180%);
+  -webkit-backdrop-filter:blur(22px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.3);
+  border-radius:14px;color:#fff;z-index:2;
+}
+.about-glass-l{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:6px;font-weight:500}
+.about-glass-t{font-size:18px;font-weight:500;line-height:1.3}
+
+/* ─────── SKILLS ─────── */
+.skills-section{padding:40px 40px 80px;background:#fff}
+.skills-wrap{max-width:1280px;margin:0 auto}
+.skills-list{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:24px}
+.skill-tile{
+  padding:32px 24px;
+  background:var(--bg-soft);
+  border:1px solid var(--border-soft);
+  border-radius:14px;
+  transition:background .2s,border-color .2s;
+}
+.skill-tile:hover{background:#fff;border-color:var(--border)}
+.skill-num{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:24px}
+.skill-name{font-size:16px;font-weight:500;letter-spacing:-0.01em;margin-bottom:8px}
+.skill-desc{font-size:12px;color:var(--text-soft);line-height:1.55}
+
+/* ─────── PROCESS ─────── */
+#process{background:var(--bg-soft)}
+.process-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px;
+}
+.proc-card{
+  padding:32px;background:#fff;border:1px solid var(--border-soft);
+  border-radius:var(--radius);
+  display:flex;flex-direction:column;gap:14px;min-height:200px;
+  transition:transform .25s,border-color .25s,box-shadow .25s;
+}
+.proc-card:hover{transform:translateY(-3px);border-color:var(--border);box-shadow:0 8px 30px rgba(0,0,0,0.04)}
+.proc-num{font-size:13px;font-weight:500;color:var(--blue);letter-spacing:.05em}
+.proc-title{font-size:18px;font-weight:500;letter-spacing:-0.01em}
+.proc-desc{font-size:13px;color:var(--text-soft);line-height:1.55;margin-top:auto}
+
+/* ─────── REVIEWS ─────── */
+#reviews{background:#fff}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.rev-card{padding:28px;background:var(--bg-soft);border:1px solid var(--border-soft);border-radius:var(--radius);display:flex;flex-direction:column;gap:18px;transition:transform .25s,box-shadow .25s}
+.rev-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,0.04)}
+.stars{display:flex;gap:2px;color:#f5a623;font-size:14px}
+.rev-text{font-size:14px;color:var(--text-soft);line-height:1.65;flex:1}
+.reviewer{display:flex;align-items:center;gap:12px;border-top:1px solid var(--border-soft);padding-top:16px}
+.ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#2647ff,#7c4dff);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:500;flex-shrink:0}
+.rev-name{font-size:13px;font-weight:500}
+.rev-role{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ─────── PRICING ─────── */
+#pricing{background:var(--bg-soft)}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px}
+.price-card{
+  background:#fff;border:1px solid var(--border-soft);
+  border-radius:var(--radius);overflow:hidden;
+  display:flex;flex-direction:column;
+  transition:transform .25s,box-shadow .25s;
+}
+.price-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,0.05)}
+.price-head{padding:16px 22px;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:#fff}
+.ph-light{background:linear-gradient(135deg,#4a4bc8,#5b5dd8)}
+.ph-std{background:linear-gradient(135deg,#b855c8,#cc65d8)}
+.ph-prem{background:linear-gradient(135deg,#8c35b0,#a045c0)}
+.ph-ultra{background:linear-gradient(135deg,#3535b0,#4545c4)}
+.price-body{padding:24px 22px;flex:1;display:flex;flex-direction:column}
+.price-amount{font-size:26px;font-weight:500;letter-spacing:-0.02em;margin-bottom:2px}
+.price-note{font-size:11px;color:var(--muted);margin-bottom:20px}
+.price-sec{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:14px 0 8px}
+.price-feat{display:flex;align-items:flex-start;gap:8px;padding:4px 0;font-size:13px;color:var(--text-soft);line-height:1.45}
+.check{width:14px;height:14px;border-radius:50%;background:var(--text);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.check svg{width:8px;height:8px}
+.price-asterisk{font-size:10px;color:var(--muted);font-style:italic;margin-top:10px}
+.price-cta{margin-top:auto;padding-top:20px}
+.price-cta a{display:block;text-align:center;background:#0a0a0f;color:#fff;padding:12px;border-radius:10px;font-size:13px;font-weight:500;transition:background .2s,transform .2s}
+.price-cta a:hover{background:#1a1a25;transform:translateY(-1px)}
+
+/* ─────── CLIENTS ─────── */
+#clients{background:#fff;padding:80px 0;overflow:hidden;border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)}
+.clients-head{text-align:left;padding:0 40px;margin-bottom:40px;max-width:1280px;margin-left:auto;margin-right:auto}
+.ticker-wrap{overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.ticker{display:flex;gap:64px;align-items:center;animation:tick 28s linear infinite;width:max-content}
+.ticker:hover{animation-play-state:paused}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.cli-logo{height:34px;width:auto;opacity:.45;filter:saturate(0);transition:opacity .3s,filter .3s;flex-shrink:0}
+.cli-logo:hover{opacity:.9;filter:none}
+
+/* ─────── FAQ ─────── */
+#faq{background:var(--bg-soft)}
+.faq-wrap{max-width:820px;margin:0 auto;padding:80px 40px}
+.faq-item{border-bottom:1px solid var(--border-soft)}
+.faq-btn{
+  width:100%;background:none;border:none;
+  color:var(--text);text-align:left;padding:22px 0;
+  font-size:16px;font-weight:500;letter-spacing:-0.005em;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  transition:color .2s;
+}
+.faq-btn:hover{opacity:.7}
+.faq-icon{
+  width:26px;height:26px;border-radius:50%;
+  background:transparent;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:14px;color:var(--text);font-weight:400;
+  transition:transform .3s,background .3s,border-color .3s,color .3s;
+}
+.faq-item.open .faq-icon{transform:rotate(45deg);background:#0a0a0f;border-color:#0a0a0f;color:#fff}
+.faq-ans{max-height:0;overflow:hidden;transition:max-height .4s,padding .3s;font-size:14px;color:var(--text-soft);line-height:1.65}
+.faq-item.open .faq-ans{max-height:280px;padding-bottom:22px}
+
+/* ─────── CONTACT ─────── */
+#contact{background:#fff}
+.contact-wrap{max-width:720px;margin:0 auto;padding:80px 40px;text-align:left}
+.contact-head{display:flex;flex-direction:column;gap:16px;margin-bottom:40px;text-align:left}
+.contact-title{font-size:clamp(32px,4vw,52px);font-weight:500;line-height:1.05;letter-spacing:-0.025em}
+.contact-desc{font-size:14px;color:var(--text-soft);line-height:1.55;max-width:440px}
+.contact-form{display:flex;flex-direction:column;gap:12px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input,textarea{
+  width:100%;background:#fff;
+  border:1px solid var(--border);border-radius:12px;
+  padding:14px 18px;color:var(--text);font-size:14px;
+  font-family:inherit;font-weight:400;outline:none;resize:none;
+  transition:border-color .2s,background .2s;
+}
+input::placeholder,textarea::placeholder{color:var(--muted)}
+input:focus,textarea:focus{border-color:#0a0a0f;background:#fafafa}
+.form-submit{
+  width:100%;background:#0a0a0f;border:none;border-radius:12px;
+  padding:16px;color:#fff;font-size:14px;font-weight:500;letter-spacing:.01em;
+  transition:background .2s,transform .2s;
+}
+.form-submit:hover{background:#1a1a25;transform:translateY(-1px)}
+.contact-socials{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.contact-socials a{display:inline-flex;align-items:center;gap:7px;color:var(--text);font-size:13px;font-weight:500;padding:9px 16px;border-radius:100px;border:1px solid var(--border);transition:background .2s}
+.contact-socials a:hover{background:var(--bg-soft)}
+.contact-socials a.wa{background:var(--green);color:#fff;border-color:transparent}
+.contact-socials a.wa:hover{opacity:.92}
+
+/* ─────── FOOTER ─────── */
+footer{background:#fff;border-top:1px solid var(--border-soft);padding:60px 40px 28px}
+.footer-inner{max-width:1280px;margin:0 auto}
+.footer-top{
+  display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:60px;margin-bottom:48px;
+  align-items:start;
+}
+.ft-logo{margin-bottom:18px;display:block}
+.ft-logo svg{height:24px;width:auto;display:block}
+.ft-logo svg path{fill:#0a0a0f}
+.ft-desc{font-size:13px;color:var(--text-soft);line-height:1.6;margin-bottom:20px;max-width:340px}
+.ft-socials{display:flex;gap:8px;flex-wrap:wrap}
+.ft-col-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:18px}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:11px}
+.ft-links a{color:var(--text);font-size:13px;font-weight:400;transition:opacity .2s}
+.ft-links a:hover{opacity:.6}
+.footer-bottom{padding-top:28px;border-top:1px solid var(--border-soft);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.ft-copy{font-size:12px;color:var(--muted)}
+
+/* ─────── RESPONSIVE ─────── */
+@media(max-width:1024px){
+  .pricing-grid{grid-template-columns:repeat(2,1fr)}
+  .skills-list{grid-template-columns:repeat(2,1fr)}
+  .about-grid{grid-template-columns:1fr;gap:32px}
+  .hero-grid{grid-template-columns:1fr;gap:32px;align-items:start}
+  .footer-top{grid-template-columns:1fr 1fr;gap:40px}
+}
+@media(max-width:768px){
+  nav{padding:14px 20px;grid-template-columns:auto 1fr auto;gap:12px}
+  .nav-left{display:none}
+  .nav-right .nav-link{display:none}
+  .nav-burger{display:flex}
+  #hero{padding:110px 20px 50px}
+  .filter-bar{padding:20px;flex-wrap:wrap;justify-content:flex-start}
+  .filter-middle{display:none}
+  #portfolio{padding:24px 20px 60px}
+  .port-grid{grid-template-columns:1fr;gap:12px}
+  .section-wrap{padding:60px 20px}
+  .skills-section{padding:30px 20px 60px}
+  .skills-list{grid-template-columns:1fr 1fr}
+  .process-grid{grid-template-columns:1fr}
+  .reviews-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr}
+  .contact-wrap,.faq-wrap{padding:60px 20px}
+  .footer-top{grid-template-columns:1fr;gap:32px}
+  .clients-head{padding:0 20px}
+  .stats-row{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .pricing-grid{grid-template-columns:1fr}
+  .skills-list{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav>
+  <div class="nav-left">
+    <a href="#about" class="nav-num"><span>01.</span> ОБО МНЕ</a>
+    <a href="#portfolio" class="nav-num"><span>02.</span> ПОРТФОЛИО</a>
+  </div>
+  <div class="nav-center">
+    <a href="#" class="nav-logo">
+      <svg width="295" height="38" viewBox="0 0 295 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 7.50663H5.39955V9.28453C6.78237 8.03341 8.69197 7.30908 10.865 7.30908C14.0915 7.30908 16.2645 8.4285 17.6473 10.4039C19.5569 8.23096 22.2567 7.30908 24.9565 7.30908C31.2121 7.30908 33.5168 11.4575 33.5168 17.9765V29.4999H28.1172V19.2935C28.1172 14.6841 27.4587 12.2477 23.7712 12.2477C21.0056 12.2477 19.3594 14.1573 19.3594 17.2522V29.4341H13.9598V19.2935C13.9598 14.6841 13.3013 12.2477 9.61384 12.2477C6.84822 12.2477 5.20201 14.1573 5.20201 17.2522V29.4341H0V7.50663Z"/>
+        <path d="M38.7191 0.0656738C40.2336 0.0656738 41.4188 1.25094 41.4188 2.76545C41.4188 4.27996 40.2336 5.46523 38.7191 5.46523C37.2046 5.46523 36.0193 4.27996 36.0193 2.76545C36.0193 1.25094 37.2046 0.0656738 38.7191 0.0656738ZM36.0193 7.50652H41.4188V29.434H36.0193V7.50652Z"/>
+        <path d="M44.1838 0.0656738H49.5834V29.434H44.1838V0.0656738Z"/>
+        <path d="M69.338 27.9854C67.5601 29.1706 65.1895 29.895 62.9507 29.895C56.5634 29.895 51.4272 24.7588 51.4272 18.5691C51.4272 12.2476 56.5634 7.24316 62.9507 7.24316C65.1895 7.24316 67.4284 7.90165 69.338 9.21861V7.44071H74.7375V29.3682H69.338V27.9854ZM63.0165 24.8905C66.5065 24.8905 69.4038 21.9932 69.4038 18.5691C69.4038 15.145 66.5065 12.2476 63.0165 12.2476C59.5266 12.2476 56.6293 15.145 56.6293 18.5691C56.6293 21.9932 59.5266 24.8905 63.0165 24.8905Z"/>
+        <path d="M77.5034 7.50663H82.903V9.28453C84.3516 8.03341 86.3929 7.30908 88.8293 7.30908C95.4141 7.30908 97.8505 11.4575 97.8505 17.9765V29.4999H92.451V19.2935C92.451 14.6841 91.7925 12.2477 87.7099 12.2477C84.6809 12.2477 82.903 14.1573 82.903 17.2522V29.4341H77.5034V7.50663Z"/>
+        <path d="M117.276 27.9854C115.498 29.1706 113.127 29.895 110.888 29.895C104.501 29.895 99.365 24.7588 99.365 18.5691C99.365 12.2476 104.501 7.24316 110.888 7.24316C113.127 7.24316 115.366 7.90165 117.276 9.21861V7.44071H122.675V29.3682H117.276V27.9854ZM110.954 24.8905C114.444 24.8905 117.342 21.9932 117.342 18.5691C117.342 15.145 114.444 12.2476 110.954 12.2476C107.464 12.2476 104.567 15.145 104.567 18.5691C104.567 21.9932 107.464 24.8905 110.954 24.8905Z"/>
+        <path d="M127.087 5.53108H125.441V2.76545C125.441 1.25094 126.626 0.0656738 128.14 0.0656738C129.655 0.0656738 130.84 1.25094 130.84 2.76545V4.93844C130.84 5.20184 130.774 5.46523 130.709 5.72862C130.248 7.24313 128.865 8.23085 127.284 8.23085C127.021 8.23085 126.823 7.96746 126.823 7.70407L127.087 5.53108Z"/>
+        <path d="M137.491 22.3883C137.491 23.9028 138.874 25.7466 141.837 25.7466C144.273 25.7466 145.458 24.5613 145.458 23.3761C145.458 21.7298 143.154 21.4665 140.981 21.1372C138.347 20.7421 132.289 20.1495 132.289 14.4207C132.289 10.2064 135.581 7.30908 141.31 7.30908C146.973 7.30908 150.331 10.0747 150.66 14.4865H145.195C145.063 13.1696 144.668 11.6551 141.508 11.6551C139.4 11.6551 138.083 12.3135 138.083 13.433C138.083 15.2109 141.047 15.4743 143.285 15.8694C147.697 16.5937 151.516 17.779 151.516 22.7176C151.516 27.722 147.368 29.9609 141.771 29.9609C135.515 29.9609 131.96 27.1294 131.762 22.4542H137.491V22.3883Z"/>
+        <path d="M179.831 27.9855C178.053 29.1708 175.683 29.8951 173.444 29.8951C167.057 29.8951 161.921 24.7589 161.921 18.5692C161.921 12.2478 167.057 7.2433 173.444 7.2433C175.683 7.2433 177.922 7.90179 179.831 9.21875V0H185.231V29.3683H179.831V27.9855ZM173.51 24.8906C177 24.8906 179.897 21.9933 179.897 18.5692C179.897 15.1451 177 12.2478 173.51 12.2478C170.02 12.2478 167.123 15.1451 167.123 18.5692C167.123 21.9933 170.02 24.8906 173.51 24.8906Z"/>
+        <path d="M209.332 24.5612C207.027 27.9854 203.735 29.895 198.993 29.895C192.079 29.895 187.075 25.0222 187.075 18.5691C187.075 12.2476 192.211 7.24316 198.598 7.24316C206.039 7.24316 210.78 13.4987 210.056 20.347H192.606C193.528 23.1784 195.767 24.8246 199.059 24.8246C201.825 24.8246 203.471 23.9686 204.854 22.059L209.332 24.5612ZM204.393 16.1327C203.339 13.6304 201.43 12.2476 198.598 12.2476C195.964 12.2476 193.726 13.8938 192.738 16.1327H204.393Z"/>
+        <path d="M216.97 22.3883C216.97 23.9028 218.353 25.7466 221.316 25.7466C223.752 25.7466 224.938 24.5613 224.938 23.3761C224.938 21.7298 222.633 21.4665 220.46 21.1372C217.826 20.7421 211.768 20.1495 211.768 14.4207C211.768 10.2064 215.06 7.30908 220.789 7.30908C226.452 7.30908 229.81 10.0747 230.14 14.4865H224.674C224.543 13.1696 224.147 11.6551 220.987 11.6551C218.88 11.6551 217.563 12.3135 217.563 13.433C217.563 15.2109 220.526 15.4743 222.765 15.8694C227.176 16.5937 230.996 17.779 230.996 22.7176C230.996 27.722 226.847 29.9609 221.25 29.9609C214.995 29.9609 211.439 27.1294 211.241 22.4542H216.97V22.3883Z"/>
+        <path d="M235.408 0.0656738C236.922 0.0656738 238.108 1.25094 238.108 2.76545C238.108 4.27996 236.922 5.46523 235.408 5.46523C233.893 5.46523 232.708 4.27996 232.708 2.76545C232.708 1.25094 233.959 0.0656738 235.408 0.0656738ZM232.708 7.50652H238.108V29.434H232.708V7.50652Z"/>
+        <path d="M292.3 24.0347C293.815 24.0347 295 25.2199 295 26.7344C295 28.249 293.815 29.4342 292.3 29.4342C290.786 29.4342 289.6 28.249 289.6 26.7344C289.6 25.2199 290.851 24.0347 292.3 24.0347Z"/>
+        <path d="M243.836 29.4999C246.272 31.2119 248.445 32.3972 251.54 32.3972C254.832 32.3972 257.796 30.4876 257.927 27.9195C256.149 29.1048 253.779 29.895 251.54 29.895C245.153 29.895 240.017 24.9563 240.017 18.5691C240.017 12.2476 245.153 7.24316 251.54 7.24316C253.779 7.24316 256.018 7.90165 257.927 9.21861V7.44071H263.327V26.7342C263.327 33.2532 259.442 37.3358 251.606 37.3358C247.853 37.3358 244.033 36.0188 241.202 33.5825L243.836 29.4999ZM251.54 24.8905C255.03 24.8905 257.927 21.9932 257.927 18.5691C257.927 15.145 255.03 12.2476 251.54 12.2476C248.05 12.2476 245.153 15.145 245.153 18.5691C245.153 21.9932 248.05 24.8905 251.54 24.8905Z"/>
+        <path d="M266.027 7.50663H271.426V9.28453C272.875 8.03341 274.916 7.30908 277.352 7.30908C283.937 7.30908 286.374 11.4575 286.374 17.9765V29.4999H280.974V19.2935C280.974 14.6841 280.316 12.2477 276.233 12.2477C273.204 12.2477 271.426 14.1573 271.426 17.2522V29.4341H266.027V7.50663Z"/>
+      </svg>
+    </a>
+  </div>
+  <div class="nav-right">
+    <a href="#contact" class="nav-link">КОНТАКТЫ</a>
+    <a href="https://wa.me/77751101051" class="btn-wa" target="_blank" rel="noopener">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+    <a href="https://www.instagram.com/galayeva.design?igsh=MTk3YjZtd2FrMDFiMQ==" class="btn-ig" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    <div class="nav-burger" id="burger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section id="hero">
+  <div class="hero-grid">
+    <h1 class="hero-title">Разработка и реализация<br>дизайн проектов</h1>
+    <div class="hero-aside">
+      <p class="hero-desc">Креативный дизайн, который будет выделяться на фоне остальных — уникальным и неповторимым стилем.</p>
+      <a href="#contact" class="btn-main">
+        Начать работу
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FILTER BAR ═══════════ -->
+<div class="filter-bar">
+  <div class="filter-bar-inner">
+    <button class="pill active">Брендинг</button>
+    <button class="pill">Айдентика</button>
+    <button class="pill">Web дизайн</button>
+  </div>
+  <div class="filter-middle"><b>КРЕАТИВНОСТЬ</b> БЕЗ ГРАНИЦ</div>
+  <div class="filter-bar-inner">
+    <button class="pill">Полиграфия</button>
+    <button class="pill">Диджитал</button>
+  </div>
+</div>
+
+<!-- ═══════════ PORTFOLIO ═══════════ -->
+<section id="portfolio">
+  <div class="port-grid">
+
+    <div class="glass-card gc-iridescent">
+      <div class="glass-label">Брендинг</div>
+      <div class="glass-arrow">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="card-bottom">
+        <div class="card-title">BrandBook<br>под ключ</div>
+        <div class="card-sub">Создаём полный фирменный стиль — логотип, палитра, шрифты и носители.</div>
+      </div>
+    </div>
+
+    <div class="glass-card gc-dark3d">
+      <div class="glass-label">Айдентика</div>
+      <div class="glass-arrow">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="card-bottom">
+        <div class="card-title">Превращаем идею<br>в визуальный язык</div>
+        <span class="card-try">УЗНАТЬ ПОДРОБНЕЕ →</span>
+      </div>
+    </div>
+
+    <div class="glass-card gc-pink gc-wide">
+      <div class="glass-label">Полиграфия</div>
+      <div class="glass-arrow">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="card-bottom">
+        <div class="card-title">Каталоги, визитки,<br>фирменные бланки</div>
+        <div class="card-sub">Полная вёрстка и подготовка макетов к печати в любом тираже.</div>
+      </div>
+    </div>
+
+    <div class="glass-card gc-teal gc-wide">
+      <div class="glass-label">Web дизайн</div>
+      <div class="glass-arrow">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="card-bottom">
+        <div class="card-title">Лендинги, которые<br>конвертируют</div>
+        <div class="card-sub">Современный дизайн с упором на UX и эстетику бренда.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════ ABOUT ═══════════ -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="about-grid">
+      <div class="about-text-col">
+        <div class="section-num">01 — ОБО МНЕ</div>
+        <h2 class="about-name">Привет!<br>Я <em>Милана</em>,<br>графический дизайнер</h2>
+        <p class="about-desc">Из Алматы. Творю и доказываю свой профессионализм не на словах, а на деле. Создаю визуальные идентичности, которые запоминаются — от логотипа до полноценного брендбука.</p>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-n">25+</div><div class="stat-l">клиентов</div></div>
+          <div class="stat"><div class="stat-n">100+</div><div class="stat-l">проектов</div></div>
+          <div class="stat"><div class="stat-n">5 лет</div><div class="stat-l">опыта работы</div></div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-glass">
+          <div class="about-glass-l">Подход</div>
+          <div class="about-glass-t">Уникальный стиль для каждого бренда — без шаблонов и компромиссов.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SKILLS ═══════════ -->
+<section class="skills-section">
+  <div class="skills-wrap">
+    <div class="section-head">
+      <div>
+        <div class="section-num">02 — МОИ СКИЛЫ</div>
+        <h2 class="section-title">Что я могу?</h2>
+      </div>
+      <div class="section-aside">Комплексный подход к созданию визуального образа бренда — от концепции до финальных исходников.</div>
+    </div>
+    <div class="skills-list">
+      <div class="skill-tile">
+        <div class="skill-num">01</div>
+        <div class="skill-name">Брендинг</div>
+        <div class="skill-desc">Полный фирменный стиль и брендбук под ключ.</div>
+      </div>
+      <div class="skill-tile">
+        <div class="skill-num">02</div>
+        <div class="skill-name">Айдентика</div>
+        <div class="skill-desc">Логотип, палитра, шрифты, паттерн.</div>
+      </div>
+      <div class="skill-tile">
+        <div class="skill-num">03</div>
+        <div class="skill-name">Полиграфия</div>
+        <div class="skill-desc">Визитки, каталоги, фирменные бланки.</div>
+      </div>
+      <div class="skill-tile">
+        <div class="skill-num">04</div>
+        <div class="skill-name">Web дизайн</div>
+        <div class="skill-desc">Современные лендинги и UI-дизайн.</div>
+      </div>
+      <div class="skill-tile">
+        <div class="skill-num">05</div>
+        <div class="skill-name">Диджитал</div>
+        <div class="skill-desc">Визуал для Instagram и соцсетей.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PROCESS ═══════════ -->
+<section id="process">
+  <div class="section-wrap">
+    <div class="section-head">
+      <div>
+        <div class="section-num">03 — ПРОЦЕСС</div>
+        <h2 class="section-title">Этапы работы</h2>
+      </div>
+      <div class="section-aside">Прозрачный процесс от первого контакта до финальных исходников. Без сюрпризов.</div>
+    </div>
+    <div class="process-grid">
+      <div class="proc-card">
+        <div class="proc-num">01 — Шаг</div>
+        <div class="proc-title">Знакомство</div>
+        <div class="proc-desc">Обсуждаем ваш проект, задачи и цели. Я задам нужные вопросы, чтобы понять ваш бизнес.</div>
+      </div>
+      <div class="proc-card">
+        <div class="proc-num">02 — Шаг</div>
+        <div class="proc-title">Брифинг</div>
+        <div class="proc-desc">Заполняем бриф, определяем техническое задание. Фиксируем сроки и стоимость.</div>
+      </div>
+      <div class="proc-card">
+        <div class="proc-num">03 — Шаг</div>
+        <div class="proc-title">Концепция</div>
+        <div class="proc-desc">Разрабатываю несколько концепций дизайна на основе брифа и референсов.</div>
+      </div>
+      <div class="proc-card">
+        <div class="proc-num">04 — Шаг</div>
+        <div class="proc-title">Разработка</div>
+        <div class="proc-desc">Создаю финальный дизайн, прорабатывая каждую деталь до совершенства.</div>
+      </div>
+      <div class="proc-card">
+        <div class="proc-num">05 — Шаг</div>
+        <div class="proc-title">Согласование</div>
+        <div class="proc-desc">Презентую работу. Вносим правки по вашим комментариям до полного утверждения.</div>
+      </div>
+      <div class="proc-card">
+        <div class="proc-num">06 — Шаг</div>
+        <div class="proc-title">Финал</div>
+        <div class="proc-desc">Передаю все исходники в нужных форматах. Проект готов к использованию.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ REVIEWS ═══════════ -->
+<section id="reviews">
+  <div class="section-wrap">
+    <div class="section-head">
+      <div>
+        <div class="section-num">04 — ОТЗЫВЫ</div>
+        <h2 class="section-title">Что говорят клиенты</h2>
+      </div>
+      <div class="section-aside">Несколько отзывов от тех, с кем мне посчастливилось работать.</div>
+    </div>
+    <div class="reviews-grid">
+      <div class="rev-card">
+        <div class="stars">★★★★★</div>
+        <p class="rev-text">Милана создала для нас полный брендбук с нуля. Результат превзошёл все ожидания — чёткий стиль, отличная коммуникация и соблюдение сроков. Обязательно обратимся снова.</p>
+        <div class="reviewer">
+          <div class="ava">АК</div>
+          <div><div class="rev-name">Анна Козлова</div><div class="rev-role">Владелец кофейни</div></div>
+        </div>
+      </div>
+      <div class="rev-card">
+        <div class="stars">★★★★★</div>
+        <p class="rev-text">Заказывали айдентику и полиграфию для ивент-агентства. Всё выполнено на высшем уровне. Клиенты постоянно спрашивают, кто делал наш дизайн.</p>
+        <div class="reviewer">
+          <div class="ava">ДС</div>
+          <div><div class="rev-name">Дмитрий Сейтов</div><div class="rev-role">Event-директор</div></div>
+        </div>
+      </div>
+      <div class="rev-card">
+        <div class="stars">★★★★★</div>
+        <p class="rev-text">Работаем с Миланой уже третий год. Делаем инстаграм-контент и сезонные баннеры. Всегда в срок, всегда красиво. Профессионал своего дела!</p>
+        <div class="reviewer">
+          <div class="ava">МТ</div>
+          <div><div class="rev-name">Мадина Таирова</div><div class="rev-role">SMM-менеджер</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PRICING ═══════════ -->
+<section id="pricing">
+  <div class="section-wrap">
+    <div class="section-head">
+      <div>
+        <div class="section-num">05 — ПАКЕТЫ</div>
+        <h2 class="section-title">Сколько это стоит?</h2>
+      </div>
+      <div class="section-aside">Выберите пакет под ваш проект. Возможна индивидуальная комплектация.</div>
+    </div>
+    <div class="pricing-grid">
+
+      <div class="price-card">
+        <div class="price-head ph-light">Пакет LIGHT</div>
+        <div class="price-body">
+          <div class="price-amount">150 000 ₸</div>
+          <div class="price-note">Стартовый пакет</div>
+          <div class="price-sec">Логотип</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Основной вариант</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Дополнительный вариант</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Цветовые + монохром</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Охранное поле + правила</div>
+          <div class="price-sec">Фирменный стиль</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Цветовая палитра</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Шрифты</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Паттерн</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Фотогалерея</div>
+          <div class="price-cta"><a href="https://wa.me/77751101051" target="_blank">Заказать →</a></div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="price-head ph-std">Пакет STANDART</div>
+        <div class="price-body">
+          <div class="price-amount">200 000 ₸</div>
+          <div class="price-note">Популярный выбор</div>
+          <div class="price-sec">Логотип + Стиль</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Всё из пакета LIGHT</div>
+          <div class="price-sec">Носители (5)</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Документница / папка</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Фирменный бланк</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Визитка</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Пакет</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Каталог (обложка)</div>
+          <div class="price-asterisk">*носители можно менять</div>
+          <div class="price-cta"><a href="https://wa.me/77751101051" target="_blank">Заказать →</a></div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="price-head ph-prem">Пакет PREMIUM</div>
+        <div class="price-body">
+          <div class="price-amount">250 000 ₸</div>
+          <div class="price-note">Расширенный пакет</div>
+          <div class="price-sec">Логотип + Стиль</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Всё из пакета STANDART</div>
+          <div class="price-sec">Носители (10)</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Документница / бланк / визитка</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Пакет / каталог</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Ежедневник</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Бейдж / кружка</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Конверт (DL и C4)</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Флаг</div>
+          <div class="price-asterisk">*носители можно менять</div>
+          <div class="price-cta"><a href="https://wa.me/77751101051" target="_blank">Заказать →</a></div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="price-head ph-ultra">Пакет ULTRA</div>
+        <div class="price-body">
+          <div class="price-amount">500 000 ₸</div>
+          <div class="price-note">Максимальный пакет</div>
+          <div class="price-sec">Логотип + Стиль</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Всё из пакета PREMIUM</div>
+          <div class="price-sec">Носители (10)</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Полный набор носителей</div>
+          <div class="price-sec">Дополнительно</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Дизайн сайта (лендинг)</div>
+          <div class="price-feat"><span class="check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></span>Инстаграм визуал (9 постов)</div>
+          <div class="price-asterisk">*носители можно менять</div>
+          <div class="price-cta"><a href="https://wa.me/77751101051" target="_blank">Заказать →</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CLIENTS ═══════════ -->
+<section id="clients">
+  <div class="clients-head">
+    <div class="section-num">06 — КЛИЕНТЫ</div>
+    <h2 class="section-title">С кем я работала</h2>
+  </div>
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <img class="cli-logo" src="лого компаний/Group 7.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 8.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 9.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 10.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 11.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 12.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 13.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 14.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 15.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 16.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 7.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 8.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 9.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 10.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 11.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 12.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 13.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 14.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 15.svg" alt="">
+      <img class="cli-logo" src="лого компаний/Group 16.svg" alt="">
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FAQ ═══════════ -->
+<section id="faq">
+  <div class="faq-wrap">
+    <div class="section-head" style="margin-bottom:32px">
+      <div>
+        <div class="section-num">07 — FAQ</div>
+        <h2 class="section-title">Остались вопросы?</h2>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        Какие сроки выполнения?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-ans">Сроки зависят от объёма проекта. Логотип — от 5 рабочих дней, полный брендбук — от 2 до 4 недель. Точные сроки обсуждаются после брифинга и фиксируются в договоре.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        Сколько это стоит?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-ans">Стоимость зависит от выбранного пакета: от 150 000 ₸ за пакет LIGHT до 500 000 ₸ за пакет ULTRA. Для нестандартных задач формируется индивидуальное предложение.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        Что входит в стоимость?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-ans">В стоимость входит всё, что указано в выбранном пакете: логотип, фирменный стиль и носители бренда. По итогу вы получаете все исходники в форматах AI, PDF, PNG, SVG.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        Как заказать дизайн?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-ans">Напишите мне в WhatsApp или заполните форму на сайте. Я отвечу в течение нескольких часов, проведём брифинг и согласуем детали проекта.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn" onclick="toggleFaq(this)">
+        Как производится оплата?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-ans">Оплата делится на два этапа: 50% предоплата до начала работы, 50% после финального согласования. Принимаю переводы на карту Kaspi или по реквизитам.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CONTACT ═══════════ -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="contact-head">
+      <div class="section-num">08 — КОНТАКТЫ</div>
+      <h2 class="contact-title">Давайте обсудим<br>ваш проект</h2>
+      <p class="contact-desc">Получите бесплатную консультацию по моим услугам. Оставьте заявку и я свяжусь с вами в течение нескольких часов.</p>
+    </div>
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <input type="text" placeholder="Ваше имя" required>
+        <input type="tel" placeholder="Номер телефона" required>
+      </div>
+      <textarea placeholder="Расскажите о вашем проекте (необязательно)" rows="3"></textarea>
+      <button type="submit" class="form-submit">Заказать проект</button>
+    </form>
+    <div class="contact-socials">
+      <a href="https://wa.me/77751101051" class="wa" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        +7 775 110 1051
+      </a>
+      <a href="https://www.instagram.com/galayeva.design?igsh=MTk3YjZtd2FrMDFiMQ==" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        galayeva.design
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <a href="#" class="ft-logo">
+          <svg width="295" height="38" viewBox="0 0 295 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 7.50663H5.39955V9.28453C6.78237 8.03341 8.69197 7.30908 10.865 7.30908C14.0915 7.30908 16.2645 8.4285 17.6473 10.4039C19.5569 8.23096 22.2567 7.30908 24.9565 7.30908C31.2121 7.30908 33.5168 11.4575 33.5168 17.9765V29.4999H28.1172V19.2935C28.1172 14.6841 27.4587 12.2477 23.7712 12.2477C21.0056 12.2477 19.3594 14.1573 19.3594 17.2522V29.4341H13.9598V19.2935C13.9598 14.6841 13.3013 12.2477 9.61384 12.2477C6.84822 12.2477 5.20201 14.1573 5.20201 17.2522V29.4341H0V7.50663Z"/>
+            <path d="M38.7191 0.0656738C40.2336 0.0656738 41.4188 1.25094 41.4188 2.76545C41.4188 4.27996 40.2336 5.46523 38.7191 5.46523C37.2046 5.46523 36.0193 4.27996 36.0193 2.76545C36.0193 1.25094 37.2046 0.0656738 38.7191 0.0656738ZM36.0193 7.50652H41.4188V29.434H36.0193V7.50652Z"/>
+            <path d="M44.1838 0.0656738H49.5834V29.434H44.1838V0.0656738Z"/>
+            <path d="M69.338 27.9854C67.5601 29.1706 65.1895 29.895 62.9507 29.895C56.5634 29.895 51.4272 24.7588 51.4272 18.5691C51.4272 12.2476 56.5634 7.24316 62.9507 7.24316C65.1895 7.24316 67.4284 7.90165 69.338 9.21861V7.44071H74.7375V29.3682H69.338V27.9854ZM63.0165 24.8905C66.5065 24.8905 69.4038 21.9932 69.4038 18.5691C69.4038 15.145 66.5065 12.2476 63.0165 12.2476C59.5266 12.2476 56.6293 15.145 56.6293 18.5691C56.6293 21.9932 59.5266 24.8905 63.0165 24.8905Z"/>
+            <path d="M77.5034 7.50663H82.903V9.28453C84.3516 8.03341 86.3929 7.30908 88.8293 7.30908C95.4141 7.30908 97.8505 11.4575 97.8505 17.9765V29.4999H92.451V19.2935C92.451 14.6841 91.7925 12.2477 87.7099 12.2477C84.6809 12.2477 82.903 14.1573 82.903 17.2522V29.4341H77.5034V7.50663Z"/>
+            <path d="M117.276 27.9854C115.498 29.1706 113.127 29.895 110.888 29.895C104.501 29.895 99.365 24.7588 99.365 18.5691C99.365 12.2476 104.501 7.24316 110.888 7.24316C113.127 7.24316 115.366 7.90165 117.276 9.21861V7.44071H122.675V29.3682H117.276V27.9854ZM110.954 24.8905C114.444 24.8905 117.342 21.9932 117.342 18.5691C117.342 15.145 114.444 12.2476 110.954 12.2476C107.464 12.2476 104.567 15.145 104.567 18.5691C104.567 21.9932 107.464 24.8905 110.954 24.8905Z"/>
+            <path d="M127.087 5.53108H125.441V2.76545C125.441 1.25094 126.626 0.0656738 128.14 0.0656738C129.655 0.0656738 130.84 1.25094 130.84 2.76545V4.93844C130.84 5.20184 130.774 5.46523 130.709 5.72862C130.248 7.24313 128.865 8.23085 127.284 8.23085C127.021 8.23085 126.823 7.96746 126.823 7.70407L127.087 5.53108Z"/>
+            <path d="M137.491 22.3883C137.491 23.9028 138.874 25.7466 141.837 25.7466C144.273 25.7466 145.458 24.5613 145.458 23.3761C145.458 21.7298 143.154 21.4665 140.981 21.1372C138.347 20.7421 132.289 20.1495 132.289 14.4207C132.289 10.2064 135.581 7.30908 141.31 7.30908C146.973 7.30908 150.331 10.0747 150.66 14.4865H145.195C145.063 13.1696 144.668 11.6551 141.508 11.6551C139.4 11.6551 138.083 12.3135 138.083 13.433C138.083 15.2109 141.047 15.4743 143.285 15.8694C147.697 16.5937 151.516 17.779 151.516 22.7176C151.516 27.722 147.368 29.9609 141.771 29.9609C135.515 29.9609 131.96 27.1294 131.762 22.4542H137.491V22.3883Z"/>
+            <path d="M179.831 27.9855C178.053 29.1708 175.683 29.8951 173.444 29.8951C167.057 29.8951 161.921 24.7589 161.921 18.5692C161.921 12.2478 167.057 7.2433 173.444 7.2433C175.683 7.2433 177.922 7.90179 179.831 9.21875V0H185.231V29.3683H179.831V27.9855ZM173.51 24.8906C177 24.8906 179.897 21.9933 179.897 18.5692C179.897 15.1451 177 12.2478 173.51 12.2478C170.02 12.2478 167.123 15.1451 167.123 18.5692C167.123 21.9933 170.02 24.8906 173.51 24.8906Z"/>
+            <path d="M209.332 24.5612C207.027 27.9854 203.735 29.895 198.993 29.895C192.079 29.895 187.075 25.0222 187.075 18.5691C187.075 12.2476 192.211 7.24316 198.598 7.24316C206.039 7.24316 210.78 13.4987 210.056 20.347H192.606C193.528 23.1784 195.767 24.8246 199.059 24.8246C201.825 24.8246 203.471 23.9686 204.854 22.059L209.332 24.5612ZM204.393 16.1327C203.339 13.6304 201.43 12.2476 198.598 12.2476C195.964 12.2476 193.726 13.8938 192.738 16.1327H204.393Z"/>
+            <path d="M216.97 22.3883C216.97 23.9028 218.353 25.7466 221.316 25.7466C223.752 25.7466 224.938 24.5613 224.938 23.3761C224.938 21.7298 222.633 21.4665 220.46 21.1372C217.826 20.7421 211.768 20.1495 211.768 14.4207C211.768 10.2064 215.06 7.30908 220.789 7.30908C226.452 7.30908 229.81 10.0747 230.14 14.4865H224.674C224.543 13.1696 224.147 11.6551 220.987 11.6551C218.88 11.6551 217.563 12.3135 217.563 13.433C217.563 15.2109 220.526 15.4743 222.765 15.8694C227.176 16.5937 230.996 17.779 230.996 22.7176C230.996 27.722 226.847 29.9609 221.25 29.9609C214.995 29.9609 211.439 27.1294 211.241 22.4542H216.97V22.3883Z"/>
+            <path d="M235.408 0.0656738C236.922 0.0656738 238.108 1.25094 238.108 2.76545C238.108 4.27996 236.922 5.46523 235.408 5.46523C233.893 5.46523 232.708 4.27996 232.708 2.76545C232.708 1.25094 233.959 0.0656738 235.408 0.0656738ZM232.708 7.50652H238.108V29.434H232.708V7.50652Z"/>
+            <path d="M292.3 24.0347C293.815 24.0347 295 25.2199 295 26.7344C295 28.249 293.815 29.4342 292.3 29.4342C290.786 29.4342 289.6 28.249 289.6 26.7344C289.6 25.2199 290.851 24.0347 292.3 24.0347Z"/>
+            <path d="M243.836 29.4999C246.272 31.2119 248.445 32.3972 251.54 32.3972C254.832 32.3972 257.796 30.4876 257.927 27.9195C256.149 29.1048 253.779 29.895 251.54 29.895C245.153 29.895 240.017 24.9563 240.017 18.5691C240.017 12.2476 245.153 7.24316 251.54 7.24316C253.779 7.24316 256.018 7.90165 257.927 9.21861V7.44071H263.327V26.7342C263.327 33.2532 259.442 37.3358 251.606 37.3358C247.853 37.3358 244.033 36.0188 241.202 33.5825L243.836 29.4999ZM251.54 24.8905C255.03 24.8905 257.927 21.9932 257.927 18.5691C257.927 15.145 255.03 12.2476 251.54 12.2476C248.05 12.2476 245.153 15.145 245.153 18.5691C245.153 21.9932 248.05 24.8905 251.54 24.8905Z"/>
+            <path d="M266.027 7.50663H271.426V9.28453C272.875 8.03341 274.916 7.30908 277.352 7.30908C283.937 7.30908 286.374 11.4575 286.374 17.9765V29.4999H280.974V19.2935C280.974 14.6841 280.316 12.2477 276.233 12.2477C273.204 12.2477 271.426 14.1573 271.426 17.2522V29.4341H266.027V7.50663Z"/>
+          </svg>
+        </a>
+        <p class="ft-desc">Графический дизайнер из Алматы. Создаю визуальные идентичности, которые запоминаются.</p>
+        <div class="ft-socials">
+          <a href="https://wa.me/77751101051" class="btn-wa" target="_blank" rel="noopener">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+          <a href="https://www.instagram.com/galayeva.design?igsh=MTk3YjZtd2FrMDFiMQ==" class="btn-ig" target="_blank" rel="noopener">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="ft-col-title">Навигация</div>
+        <ul class="ft-links">
+          <li><a href="#about">Обо мне</a></li>
+          <li><a href="#portfolio">Портфолио</a></li>
+          <li><a href="#process">Этапы работы</a></li>
+          <li><a href="#reviews">Отзывы</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="ft-col-title">Услуги</div>
+        <ul class="ft-links">
+          <li><a href="#pricing">Пакеты и цены</a></li>
+          <li><a href="#faq">Вопросы</a></li>
+          <li><a href="#contact">Контакты</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="ft-copy">2025 © Все права защищены — milana's design</span>
+      <span class="ft-copy">Алматы, Казахстан</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+function toggleMenu() {
+  const left = document.querySelector('.nav-left');
+  const isOpen = left.style.display === 'flex';
+  left.style.cssText = isOpen ? '' : 'display:flex;flex-direction:column;position:fixed;top:60px;left:0;right:0;background:rgba(250,250,250,0.97);backdrop-filter:blur(20px);padding:20px;gap:18px;border-bottom:1px solid rgba(0,0,0,0.06);z-index:99';
+}
+
+document.querySelectorAll('.nav-left a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      document.querySelector('.nav-left').style.cssText = '';
+    }
+  });
+});
+
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = '✓ Заявка отправлена';
+  btn.style.background = '#25D366';
+  setTimeout(() => {
+    btn.textContent = 'Заказать проект';
+    btn.style.background = '';
+    e.target.reset();
+  }, 3000);
+}
+
+// Pill filter (visual only)
+document.querySelectorAll('.filter-bar .pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('.filter-bar .pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
