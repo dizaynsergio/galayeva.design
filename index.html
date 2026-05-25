@@ -1362,7 +1362,7 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
   if(!form) return;
 
   const TG_TOKEN='8638172607:AAGdzrBRR5j3NUyR-5CGOn3ZHTaxUvUzRWY';
-  const TG_CHAT_ID='1252560147';
+  const TG_CHAT_IDS=['1203690096'];
   const formLoadTs=Date.now();
 
   const btn=form.querySelector('.form-submit');
@@ -1407,18 +1407,23 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
       (message?'\n<b>Проект:</b> '+escapeHtml(message):'');
 
     try{
-      const res=await fetch('https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          chat_id:TG_CHAT_ID,
-          text:text,
-          parse_mode:'HTML',
-          disable_web_page_preview:true
-        })
-      });
-      const json=await res.json();
-      if(!json.ok) throw new Error(json.description||'Telegram error');
+      const sends=await Promise.all(TG_CHAT_IDS.map(id=>fetch(
+        'https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage',
+        {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            chat_id:id,
+            text:text,
+            parse_mode:'HTML',
+            disable_web_page_preview:true
+          })
+        }
+      ).then(r=>r.json())));
+      if(!sends.every(j=>j&&j.ok)){
+        const fail=sends.find(j=>!j||!j.ok);
+        throw new Error((fail&&fail.description)||'Telegram error');
+      }
 
       btn.textContent='✓ Заявка отправлена';
       btn.style.background='#2647ff';
