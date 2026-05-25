@@ -721,6 +721,15 @@ section{position:relative}
   -webkit-backdrop-filter:blur(8px);
 }
 #contact .form-submit:hover{background:rgba(38,71,255,.85);border-color:rgba(255,255,255,.35);transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.2)}
+#contact .form-submit:disabled{opacity:.7;cursor:default;transform:none;box-shadow:none}
+.form-status{
+  min-height:18px;margin-top:4px;
+  font-size:12px;line-height:1.4;
+  color:rgba(255,255,255,.85);
+  transition:color .25s ease;
+}
+.form-status[data-kind="err"]{color:#ffd0d8}
+.form-status[data-kind="ok"]{color:#c7ffd6}
 #contact .contact-socials a{
   display:inline-flex;align-items:center;gap:7px;
   color:#fff;font-size:13px;font-weight:500;
@@ -1236,13 +1245,15 @@ footer{background:#fff;border-top:1px solid var(--border-soft);padding:60px var(
         <span class="contact-desc-lead">Получите бесплатную консультацию<br class="contact-desc-lead-br"> по моим услугам</span>
         <span class="contact-desc-sub">Оставьте заявку и я свяжусь с вами в течение нескольких часов</span>
       </p>
-    <form class="contact-form" onsubmit="handleSubmit(event)">
+    <form class="contact-form" id="orderForm" novalidate>
       <div class="form-row">
-        <input type="text" placeholder="Ваше имя" required>
-        <input type="tel" placeholder="Номер телефона" required>
+        <input type="text" name="name" placeholder="Ваше имя" required autocomplete="name" minlength="2" maxlength="80">
+        <input type="tel" name="phone" placeholder="Номер телефона" required autocomplete="tel" minlength="6" maxlength="32">
       </div>
-      <textarea placeholder="Расскажите о вашем проекте (необязательно)" rows="3"></textarea>
+      <textarea name="message" placeholder="Расскажите о вашем проекте (необязательно)" rows="3" maxlength="2000"></textarea>
+      <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
       <button type="submit" class="form-submit">Заказать проект</button>
+      <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
     </form>
     <div class="contact-socials">
       <a href="https://wa.me/77751101051" class="wa" target="_blank" rel="noopener">
@@ -1346,17 +1357,87 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
   });
 });
 
-function handleSubmit(e){
-  e.preventDefault();
-  const btn=e.target.querySelector('.form-submit');
-  btn.textContent='✓ Заявка отправлена';
-  btn.style.background='#2647ff';
-  setTimeout(()=>{
-    btn.textContent='Заказать проект';
-    btn.style.background='';
-    e.target.reset();
-  },3000);
-}
+(function initOrderForm(){
+  const form=document.getElementById('orderForm');
+  if(!form) return;
+
+  const TG_TOKEN='8638172607:AAGdzrBRR5j3NUyR-5CGOn3ZHTaxUvUzRWY';
+  const TG_CHAT_ID='1252560147';
+  const formLoadTs=Date.now();
+
+  const btn=form.querySelector('.form-submit');
+  const status=form.querySelector('#formStatus');
+  const defaultText='Заказать проект';
+
+  function setStatus(msg,kind){
+    if(!status) return;
+    status.textContent=msg||'';
+    status.dataset.kind=kind||'';
+  }
+
+  function escapeHtml(s){
+    return String(s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  }
+
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(btn.disabled) return;
+
+    const data=new FormData(form);
+    const name=(data.get('name')||'').toString().trim();
+    const phone=(data.get('phone')||'').toString().trim();
+    const message=(data.get('message')||'').toString().trim();
+    const honeypot=(data.get('company')||'').toString().trim();
+
+    if(honeypot) return;
+    if(Date.now()-formLoadTs<1500) return;
+    if(name.length<2||phone.length<6){
+      setStatus('Заполните имя и номер телефона','err');
+      return;
+    }
+
+    btn.disabled=true;
+    btn.textContent='Отправляем…';
+    setStatus('','');
+
+    const text=
+      '🎨 <b>Новая заявка с сайта</b>\n\n'+
+      '<b>Имя:</b> '+escapeHtml(name)+'\n'+
+      '<b>Телефон:</b> '+escapeHtml(phone)+
+      (message?'\n<b>Проект:</b> '+escapeHtml(message):'');
+
+    try{
+      const res=await fetch('https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          chat_id:TG_CHAT_ID,
+          text:text,
+          parse_mode:'HTML',
+          disable_web_page_preview:true
+        })
+      });
+      const json=await res.json();
+      if(!json.ok) throw new Error(json.description||'Telegram error');
+
+      btn.textContent='✓ Заявка отправлена';
+      btn.style.background='#2647ff';
+      setStatus('Спасибо! Свяжусь с вами в ближайшее время.','ok');
+      form.reset();
+      setTimeout(()=>{
+        btn.textContent=defaultText;
+        btn.style.background='';
+        btn.disabled=false;
+        setStatus('','');
+      },4500);
+    }catch(err){
+      console.error('form submit failed',err);
+      btn.textContent=defaultText;
+      btn.disabled=false;
+      setStatus('Не удалось отправить. Напишите в WhatsApp или Instagram ниже.','err');
+    }
+  });
+})();
 
 (function initNavSpy(){
   const sectionOrder=['portfolio','about','skills','process','pricing','faq','contact'];
