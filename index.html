@@ -129,7 +129,7 @@ nav{
 }
 .hero-deco{
   position:absolute;
-  top:60px;right:-100px;
+  top:60px;left:-160px;
   width:480px;height:480px;
   border-radius:50%;
   background:
@@ -140,16 +140,34 @@ nav{
   filter:blur(80px);
   opacity:.35;
   pointer-events:none;
+  z-index:0;
   animation:float 12s ease-in-out infinite;
+}
+.hero-3d{
+  position:absolute;
+  top:20px;right:-60px;
+  width:clamp(380px,44vw,640px);
+  aspect-ratio:1536 / 1024;
+  object-fit:cover;
+  z-index:1;
+  pointer-events:none;
+  -webkit-mask-image:radial-gradient(ellipse 55% 60% at 58% 50%,#000 0%,#000 22%,transparent 90%);
+  mask-image:radial-gradient(ellipse 55% 60% at 58% 50%,#000 0%,#000 22%,transparent 90%);
+  filter:blur(.4px);
+  animation:hero-3d-float 14s ease-in-out infinite;
 }
 @keyframes float{
   0%,100%{transform:translate(0,0) scale(1)}
   50%{transform:translate(-30px,20px) scale(1.05)}
 }
+@keyframes hero-3d-float{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-12px,-10px) scale(1.02)}
+}
 .hero-grid{
   max-width:var(--layout-max);margin:0 auto;
   display:grid;grid-template-columns:1.5fr 1fr;
-  gap:80px;align-items:end;position:relative;z-index:1;
+  gap:80px;align-items:end;position:relative;z-index:2;
 }
 .hero-title{
   font-size:clamp(40px,5.5vw,72px);
@@ -794,7 +812,8 @@ footer{background:#fff;border-top:1px solid var(--border-soft);padding:60px var(
   .nav-right .nav-link{display:none}
   .nav-burger{display:flex}
   #hero{padding:110px var(--layout-pad) 50px}
-  .hero-deco{width:320px;height:320px;top:80px;right:-100px}
+  .hero-deco{width:320px;height:320px;top:80px;left:-120px}
+  .hero-3d{width:280px;top:60px;right:-50px;opacity:.7}
   .portfolio-cta-inner{grid-template-columns:1fr;column-gap:0;row-gap:32px;padding:80px var(--layout-pad)}
   .portfolio-cta-eyebrow{margin-bottom:20px}
   .port-pill{padding:13px 22px;font-size:16px}
@@ -884,6 +903,7 @@ footer{background:#fff;border-top:1px solid var(--border-soft);padding:60px var(
 <!-- ═══════════ HERO ═══════════ -->
 <section id="hero">
   <div class="hero-deco"></div>
+  <img class="hero-3d" src="3D/hero-3d.jpg" alt="" aria-hidden="true" loading="eager" decoding="async">
   <div class="hero-grid">
     <h1 class="hero-title">Разработка и реализация<br><em>дизайн проектов</em></h1>
     <div class="hero-aside">
