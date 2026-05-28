@@ -745,6 +745,11 @@ section{position:relative}
 }
 .form-status[data-kind="err"]{color:#ffd0d8}
 .form-status[data-kind="ok"]{color:#c7ffd6}
+.turnstile-wrap{
+  margin-top:2px;
+  display:flex;
+  justify-content:center;
+}
 #contact .contact-socials a{
   display:inline-flex;align-items:center;gap:7px;
   color:#fff;font-size:13px;font-weight:500;
@@ -1280,7 +1285,7 @@ footer{background:#fff;border-top:1px solid var(--border-soft);padding:60px var(
         <span class="contact-desc-lead">Получите бесплатную консультацию<br class="contact-desc-lead-br"> по моим услугам</span>
         <span class="contact-desc-sub">Оставьте заявку и я свяжусь с вами в течение нескольких часов</span>
       </p>
-    <form class="contact-form" id="orderForm" novalidate>
+    <form class="contact-form" id="orderForm" novalidate data-endpoint="https://galayeva-form-bot.dizaynsergio.workers.dev" data-turnstile-sitekey="0x4AAAAAADX0yOwwfQ6dyMrj">
       <div class="form-row">
         <input type="text" name="name" placeholder="Ваше имя" required autocomplete="name" minlength="2" maxlength="80">
         <input type="tel" name="phone" placeholder="Номер телефона" required autocomplete="tel" minlength="6" maxlength="32">
@@ -1288,6 +1293,9 @@ footer{background:#fff;border-top:1px solid var(--border-soft);padding:60px var(
       <textarea name="message" placeholder="Расскажите о вашем проекте (необязательно)" rows="3" maxlength="2000"></textarea>
       <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
       <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
+      <div class="turnstile-wrap">
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAADX0yOwwfQ6dyMrj" data-theme="dark"></div>
+      </div>
       <button type="submit" class="form-submit">Заказать проект</button>
       <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
     </form>
@@ -1397,8 +1405,8 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
   const form=document.getElementById('orderForm');
   if(!form) return;
 
-  const TG_TOKEN='8638172607:AAGdzrBRR5j3NUyR-5CGOn3ZHTaxUvUzRWY';
-  const TG_CHAT_IDS=['1203690096'];
+  const FORM_ENDPOINT=(form.dataset.endpoint||'').trim();
+  const TURNSTILE_SITEKEY=(form.dataset.turnstileSitekey||'').trim();
   const formLoadTs=Date.now();
   const SUBMIT_COOLDOWN_MS=90*1000;
   const LAST_SUBMIT_KEY='gd_last_submit_ts';
@@ -1411,10 +1419,6 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
     if(!status) return;
     status.textContent=msg||'';
     status.dataset.kind=kind||'';
-  }
-
-  function escapeHtml(s){
-    return String(s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
   }
 
   function hasUrl(s){
@@ -1435,12 +1439,21 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
     const message=(data.get('message')||'').toString().trim();
     const honeypot=(data.get('company')||'').toString().trim();
     const honeypot2=(data.get('website')||'').toString().trim();
+    const turnstileToken=(data.get('cf-turnstile-response')||'').toString().trim();
     const now=Date.now();
     const lastSubmitTs=Number(localStorage.getItem(LAST_SUBMIT_KEY)||0);
     const normalizedPhone=normalizePhone(phone);
     const digitsOnly=normalizedPhone.replace(/\D/g,'');
 
     if(honeypot||honeypot2) return;
+    if(!TURNSTILE_SITEKEY || TURNSTILE_SITEKEY.includes('REPLACE_WITH_')){
+      setStatus('Turnstile не настроен. Добавьте site key.','err');
+      return;
+    }
+    if(!turnstileToken){
+      setStatus('Подтвердите, что вы не робот.','err');
+      return;
+    }
     if(now-formLoadTs<4000) return;
     if(lastSubmitTs && now-lastSubmitTs<SUBMIT_COOLDOWN_MS){
       setStatus('Подождите немного перед повторной отправкой.','err');
@@ -1471,29 +1484,29 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
     btn.textContent='Отправляем…';
     setStatus('','');
 
-    const text=
-      '🎨 <b>Новая заявка с сайта</b>\n\n'+
-      '<b>Имя:</b> '+escapeHtml(name)+'\n'+
-      '<b>Телефон:</b> '+escapeHtml(phone)+
-      (message?'\n<b>Проект:</b> '+escapeHtml(message):'');
+    if(!FORM_ENDPOINT){
+      btn.textContent=defaultText;
+      btn.disabled=false;
+      setStatus('Webhook не настроен. Напишите в WhatsApp ниже.','err');
+      return;
+    }
 
     try{
-      const sends=await Promise.all(TG_CHAT_IDS.map(id=>fetch(
-        'https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage',
-        {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({
-            chat_id:id,
-            text:text,
-            parse_mode:'HTML',
-            disable_web_page_preview:true
-          })
-        }
-      ).then(r=>r.json())));
-      if(!sends.every(j=>j&&j.ok)){
-        const fail=sends.find(j=>!j||!j.ok);
-        throw new Error((fail&&fail.description)||'Telegram error');
+      const res=await fetch(FORM_ENDPOINT,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          name:name,
+          phone:phone,
+          message:message,
+          turnstileToken:turnstileToken,
+          source:'galayeva.design',
+          ts:now
+        })
+      });
+      if(!res.ok){
+        const payload=await res.json().catch(()=>({}));
+        throw new Error((payload&&payload.error)||'submit failed');
       }
 
       btn.textContent='✓ Заявка отправлена';
@@ -1538,5 +1551,6 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
 })();
 
 </script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </body>
 </html>

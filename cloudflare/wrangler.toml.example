@@ -1,0 +1,6 @@
+name = "galayeva-form-bot"
+main = "telegram-form-worker.js"
+compatibility_date = "2026-05-28"
+
+[vars]
+ALLOWED_ORIGIN = "https://galayeva.design"
