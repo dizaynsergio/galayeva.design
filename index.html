@@ -812,7 +812,7 @@ footer{background:#fff;border-top:1px solid var(--border-soft);padding:60px var(
   .hero-deco{width:320px;height:320px;top:auto;left:auto;bottom:-80px;right:-120px}
   .hero-3d{
     top:auto;left:auto;
-    right:-20px;bottom:-20px;
+    right:-20px;bottom:-10px;
     width:62%;max-width:280px;
   }
   .portfolio-cta-inner{grid-template-columns:1fr;column-gap:0;row-gap:32px;padding:80px var(--layout-pad)}
@@ -1287,6 +1287,7 @@ footer{background:#fff;border-top:1px solid var(--border-soft);padding:60px var(
       </div>
       <textarea name="message" placeholder="Расскажите о вашем проекте (необязательно)" rows="3" maxlength="2000"></textarea>
       <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
       <button type="submit" class="form-submit">Заказать проект</button>
       <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
     </form>
@@ -1399,6 +1400,8 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
   const TG_TOKEN='8638172607:AAGdzrBRR5j3NUyR-5CGOn3ZHTaxUvUzRWY';
   const TG_CHAT_IDS=['1203690096'];
   const formLoadTs=Date.now();
+  const SUBMIT_COOLDOWN_MS=90*1000;
+  const LAST_SUBMIT_KEY='gd_last_submit_ts';
 
   const btn=form.querySelector('.form-submit');
   const status=form.querySelector('#formStatus');
@@ -1414,6 +1417,14 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
     return String(s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
   }
 
+  function hasUrl(s){
+    return /(https?:\/\/|www\.|t\.me\/|telegram\.me\/)/i.test(String(s||''));
+  }
+
+  function normalizePhone(s){
+    return String(s||'').replace(/[^\d+]/g,'');
+  }
+
   form.addEventListener('submit',async e=>{
     e.preventDefault();
     if(btn.disabled) return;
@@ -1423,11 +1434,36 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
     const phone=(data.get('phone')||'').toString().trim();
     const message=(data.get('message')||'').toString().trim();
     const honeypot=(data.get('company')||'').toString().trim();
+    const honeypot2=(data.get('website')||'').toString().trim();
+    const now=Date.now();
+    const lastSubmitTs=Number(localStorage.getItem(LAST_SUBMIT_KEY)||0);
+    const normalizedPhone=normalizePhone(phone);
+    const digitsOnly=normalizedPhone.replace(/\D/g,'');
 
-    if(honeypot) return;
-    if(Date.now()-formLoadTs<1500) return;
+    if(honeypot||honeypot2) return;
+    if(now-formLoadTs<4000) return;
+    if(lastSubmitTs && now-lastSubmitTs<SUBMIT_COOLDOWN_MS){
+      setStatus('Подождите немного перед повторной отправкой.','err');
+      return;
+    }
     if(name.length<2||phone.length<6){
       setStatus('Заполните имя и номер телефона','err');
+      return;
+    }
+    if(hasUrl(name)||hasUrl(phone)||hasUrl(message)){
+      setStatus('Ссылки в заявке не допускаются.','err');
+      return;
+    }
+    if(/(spam|bot|test|тест)/i.test(name)){
+      setStatus('Проверьте корректность имени.','err');
+      return;
+    }
+    if(!/^[\p{L}\s'.-]{2,80}$/u.test(name)){
+      setStatus('Укажите корректное имя.','err');
+      return;
+    }
+    if(!/^\+?[\d\s()-]{8,24}$/.test(phone) || digitsOnly.length<10 || digitsOnly.length>15){
+      setStatus('Укажите корректный номер телефона.','err');
       return;
     }
 
@@ -1463,6 +1499,7 @@ document.querySelectorAll('.nav-menu a').forEach(a=>{
       btn.textContent='✓ Заявка отправлена';
       btn.style.background='#2647ff';
       setStatus('Спасибо! Свяжусь с вами в ближайшее время.','ok');
+      localStorage.setItem(LAST_SUBMIT_KEY,String(now));
       form.reset();
       setTimeout(()=>{
         btn.textContent=defaultText;
